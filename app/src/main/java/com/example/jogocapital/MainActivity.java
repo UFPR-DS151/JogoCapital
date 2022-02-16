@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Random r = new Random();
         int index = r.nextInt(15) + 1;
         this.estadoAtual = estados[index];
+        this.capitalAtual = capitais[index];
         stateInput.setText(estadoAtual);
     }
 
