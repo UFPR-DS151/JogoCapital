@@ -3,6 +3,9 @@ package com.example.jogocapital;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -32,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView stateInput = findViewById(R.id.textViewRandomState);
+        Random r = new Random();
+        int index = r.nextInt(15) + 1;
+        this.estadoAtual = estados[index];
+        stateInput.setText(estadoAtual);
     }
 
     public MainActivity() {
@@ -42,33 +50,30 @@ public class MainActivity extends AppCompatActivity {
         this.rodada = 0;
     }
 
-    public void randomState() {
-        // Chamar essa função quando o programa for iniciado (ou caso queira criar um botão "começar jogo", colocar após essa ação)
-        // e quando o usuário clicar em próxima pergunta
+    public void randomState(View view) {
+        TextView stateInput = findViewById(R.id.textViewRandomState);
         Random r = new Random();
-        do { // loop para repetir caso o programa gere um index já chamado anteriormente
-            int index = r.nextInt(15);
-            if (!this.indexBlacklist.contains(index)) {
-                this.estadoAtual = estados[index];
-                this.capitalAtual = capitais[index];
-                this.indexBlacklist.add(index);
-                break;
-            } else {
-                continue;
-            }
-        } while(true);
+        int index = r.nextInt(15) + 1;
+        this.estadoAtual = estados[index];
+        this.capitalAtual = capitais[index];
+        stateInput.setText(estadoAtual);
 
-        // Faltou fazer TextView que mostra o estado para o usuário receber o estado gerado
     }
 
-    public void Answer() {
-        // Pegar valor da PlainText e inserir na váriavel "capitalEscolhida" (usando valor estático no momento)
-        String capitalEscolhida = "Salvador";
-        capitalEscolhida = capitalEscolhida.toLowerCase(Locale.ROOT);
+    public void Answer(View view) {
+        TextView outPoints = findViewById(R.id.textViewOutputPoints);
+        TextView outAnswer = findViewById(R.id.textViewOutputCorrect);
+
+        EditText inputCapital = findViewById(R.id.editTextInputCapital);
+        String capitalEscolhida = inputCapital.getText().toString();
+
         if (capitalEscolhida == this.capitalAtual) {
             this.pontos++;
+            outAnswer.setText("Você acertou!");
+            outPoints.setText("Pontuação: " + (this.pontos*10));
         } else {
-            // Informar o usuário que ele errou e a capital correta
+            outAnswer.setText("Você errou! A capital correta é " + this.capitalAtual);
+            outPoints.setText("Pontuação: " + (this.pontos*10));
         }
 
         if (this.rodada < 4) { // Verificando se é a última rodada do jogo
